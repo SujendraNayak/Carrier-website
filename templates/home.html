@@ -18,7 +18,12 @@
         </p>
         
         <h2 class="text-center mt-2 mb-2">Open Positions</h2>
-        <p>TODO: List open positions here.</p>
+        <p>
+            {% for job in JOBS %}
+                {% include 'jobitem.html' %}
+            {% endfor%}
+        </p>
+        
         
         <div class=" text-center mt-4">
             <button class="btn btn-primary btn-lg">Contact Us</button>
