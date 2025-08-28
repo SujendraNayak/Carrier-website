@@ -1,50 +1,27 @@
 from flask import Flask, render_template, jsonify
-app=Flask(__name__)
-JOBS = [
-    {
-        'id': 1,
-        'title': 'Software Engineer',
-        'location': 'New York, NY',
-        'salary': '$120,000'
-    },
-    {
-        'id': 2,
-        'title': 'Data Scientist',
-        'location': 'San Francisco, CA',
-        'salary': '$150,000'
-    },
-    {
-        'id': 3,
-        'title': 'Product Manager',
-        'location': 'Austin, TX',
-        'salary': '$130,000'
-    },
-      {
-        'id': 1,
-        'title': 'Software Engineer',
-        'location': 'New York, NY',
-        'salary': '$120,000'
-    },
-    {
-        'id': 2,
-        'title': 'Data Scientist',
-        'location': 'San Francisco, CA',
-        'salary': '$150,000'
-    },
-    {
-        'id': 3,
-        'title': 'Product Manager',
-        'location': 'Austin, TX',
-        'salary': '$130,000'
-    }
-]
+from sqlalchemy import create_engine, text
+
+app = Flask(__name__)
+
+# ✅ Create SQLAlchemy engine
+engine = create_engine("mysql+pymysql://root:Sujendra%4027@127.0.0.1:3306/career")
+
+# ✅ Function to load jobs from DB
+def load_jobs_from_db():
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM jobs"))
+        jobs = [dict(row._mapping) for row in result.all()]
+    return jobs
+
 @app.route('/')
 def home():
-    return render_template('home.html',JOBS=JOBS)
+    jobs = load_jobs_from_db()   # get jobs from DB
+    return render_template('home.html', JOBS=jobs)
 
-@app.route('/api/JOBS')
+@app.route('/api/jobs')
 def list_jobs():
-    return jsonify(JOBS)
+    jobs = load_jobs_from_db()   # get jobs from DB
+    return jsonify(jobs)
 
 if __name__ == '__main__':
     app.run(debug=True)
