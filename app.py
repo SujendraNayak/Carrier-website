@@ -21,5 +21,6 @@ def show_job(id):
         return render_template('jobpage.html', job=job)
     return "Job not found", 404
 
+
 if __name__ == '__main__':
     app.run(debug=True)

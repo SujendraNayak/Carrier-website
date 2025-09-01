@@ -24,3 +24,9 @@ def load_jobs_from_db():
     with engine.connect() as conn:
         result = conn.execute(text("SELECT * FROM jobs"))
         return [dict(row._mapping) for row in result.all()]
+    
+def load_job_from_db(id):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM jobs WHERE id = :id"), {"id": id})
+        row = result.fetchone()
+        return dict(row._mapping) if row else None
