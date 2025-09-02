@@ -2,6 +2,7 @@ import os
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 from urllib.parse import quote_plus
+#from database import load_job_from_db
 
 # ✅ Load environment variables
 load_dotenv()
@@ -27,6 +28,12 @@ def load_jobs_from_db():
     
 def load_job_from_db(id):
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM jobs WHERE id = :id"), {"id": id})
-        row = result.fetchone()
-        return dict(row._mapping) if row else None
+        result = conn.execute(text("SELECT * FROM jobs WHERE id = :val"), 
+                              val=id
+        )
+        row = result.all()
+        if len(row)==0:
+            return None
+        else:
+            return dict(row[0])
+       # return dict(row._mapping) if row else None
